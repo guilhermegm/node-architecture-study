@@ -1,0 +1,19 @@
+{
+  "name": "study",
+  "version": "1.0.0",
+  "description": "description",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git"
+  },
+  "author": "Guilherme Giacchetto Moreira",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^1.0.0-rc.1"
+  }
+}
