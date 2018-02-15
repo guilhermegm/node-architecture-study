@@ -8,7 +8,11 @@ const chatUsecases = require('../../domains/chat/usecases')
 
 const commands = {
   createPerson: async ({ personName, personWs }) => {
-    const person = await personUsecases.createPerson({ name: personName })
+    const person = await personUsecases.createPerson({
+      name: personName,
+      handlers: { ws: personWs },
+    })
+    personWs.person = person
     return person
   },
   createRoomHandler: async ({ personName, personWs, roomName }) => {
@@ -23,12 +27,15 @@ const commands = {
     return roomUsecases.addPerson({ roomName, person })
   },
   sendRoomMessage: async ({ personName, personWs, roomName, message }) => {
+    const person = personWs.person
+    const room = await roomUsecases.getRoom({ roomName })
+
     return chatUsecases.sendRoomMessage({
       room,
       person,
       message,
       onSend: ({ personFrom, personTo, message }) => {
-        console.log(personFrom, personTo, message)
+        personTo.handlers.ws.send(message)
       }
     })
   },

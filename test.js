@@ -15,10 +15,29 @@ const init = () => {
     }
 
     person1.send(JSON.stringify(command))
+
+    setTimeout(() => {
+      const command2 = {
+        cmd: 'sendRoomMessage',
+        payload: {
+          message: 'Blz???',
+          roomName: 'Sala 1'
+        }
+      }
+      person1.send(JSON.stringify(command2))
+    }, 700)
+  }
+
+  person1.onmessage = (event) => {
+    console.log('person1', event.data)
   }
 
 
   const person2 = new WebSocket('ws://localhost:3300')
+
+  person2.onmessage = (event) => {
+    console.log('person2', event.data)
+  }
 
   person2.onopen = () => {
     console.log('Connection open!')

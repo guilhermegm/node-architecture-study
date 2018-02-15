@@ -1,5 +1,6 @@
-const Person = ({ name }) => ({
+const Person = ({ name, handlers = {} }) => ({
   name,
+  handlers,
 })
 
 module.exports = {
