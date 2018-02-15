@@ -1,5 +1,5 @@
 const Person = ({ name }) => ({
-  name
+  name,
 })
 
 module.exports = {

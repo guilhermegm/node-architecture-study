@@ -1,6 +1,6 @@
 const { Person } = require('./models')
 
-const createPerson = ({ name }) => {
+const createPerson = async ({ name }) => {
   const person = Person({ name })
   const event = {
     usecase: 'createPerson',

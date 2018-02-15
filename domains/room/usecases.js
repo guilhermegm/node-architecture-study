@@ -26,13 +26,19 @@ const createRoom = async ({ name }) => {
   return room
 }
 
-const addPerson = ({ roomName, person }) => {
+const getRoom = async ({ roomName }) => {
   const room = roomsList[roomName]
-  const alreadyJoined = !!room.participants.find((p) => p.name === person.name)
 
   if (!room) {
     return Promise.reject(Error.room.notFound)
   }
+
+  return room
+}
+
+const addPerson = async ({ roomName, person }) => {
+  const room = await getRoom({ roomName })
+  const alreadyJoined = !!room.participants.find((p) => p.name === person.name)
 
   if (alreadyJoined) {
     return Promise.reject(Error.room.alreadyJoined)
@@ -48,10 +54,11 @@ const addPerson = ({ roomName, person }) => {
   }
   console.log(event);
 
-  return Promise.resolve(event)
+  return event
 }
 
 module.exports = {
   createRoom,
   addPerson,
+  getRoom,
 }

@@ -4,27 +4,40 @@ const wss = new WebSocket.Server({ port: 3300 })
 
 const roomUsecases = require('../../domains/room/usecases')
 const personUsecases = require('../../domains/person/usecases')
+const chatUsecases = require('../../domains/chat/usecases')
 
 const commands = {
-  createPerson: ({ name }) => personUsecases.createPerson({ name }),
-  createRoom: ({ name }) => roomUsecases.createRoom({ name }),
-  createRoomHandler: async ({ personName, roomName }) => {
-    const person = await commands.createPerson({ name: personName })
-    const room = await commands.createRoom({ name: roomName })
+  createPerson: async ({ personName, personWs }) => {
+    const person = await personUsecases.createPerson({ name: personName })
+    return person
+  },
+  createRoomHandler: async ({ personName, personWs, roomName }) => {
+    const person = await commands.createPerson({ personName, personWs })
+    const room = await roomUsecases.createRoom({ name: roomName })
 
     return roomUsecases.addPerson({ roomName: room.name, person })
   },
-  joinRoomHandler: async ({ personName, roomName }) => {
-    const person = await commands.createPerson({ name: personName })
+  joinRoomHandler: async ({ personName, personWs, roomName }) => {
+    const person = await commands.createPerson({ personName, personWs })
 
     return roomUsecases.addPerson({ roomName, person })
   },
+  sendRoomMessage: async ({ personName, personWs, roomName, message }) => {
+    return chatUsecases.sendRoomMessage({
+      room,
+      person,
+      message,
+      onSend: ({ personFrom, personTo, message }) => {
+        console.log(personFrom, personTo, message)
+      }
+    })
+  },
 }
 
-const commandHandler = ({ cmd, payload }) => {
+const commandHandler = ({ cmd, payload, ws: personWs }) => {
   console.log('command', cmd, payload)
   if(cmd in commands) {
-    return commands[cmd](payload)
+    return commands[cmd]({ personWs, ...payload })
   }
 
   return Promise.reject()
@@ -32,11 +45,10 @@ const commandHandler = ({ cmd, payload }) => {
 
 
 wss.on('connection', (ws) => {
-
   ws.on('message', (message) => {
     const messageParse = JSON.parse(message)
 
-    commandHandler(messageParse)
+    commandHandler({ ws, ...messageParse })
     .then((res) => {
       // console.log('res', res)
     })
