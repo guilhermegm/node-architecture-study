@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "test"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -14,6 +14,11 @@
   "author": "Guilherme Giacchetto Moreira",
   "license": "ISC",
   "dependencies": {
-    "fastify": "^1.0.0-rc.1"
+    "fastify": "^1.0.0-rc.1",
+    "socket.io": "^2.0.4",
+    "ws": "^4.0.0"
+  },
+  "devDependencies": {
+    "jest": "^22.3.0"
   }
 }
