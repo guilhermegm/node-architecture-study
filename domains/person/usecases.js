@@ -1,7 +1,7 @@
 const { Person } = require('./models')
 
-const createPerson = async ({ name, handlers }) => {
-  const person = Person({ name, handlers })
+const createPerson = async ({ name, meta }) => {
+  const person = Person({ name, meta })
   const event = {
     usecase: 'createPerson',
     person: person.name,

@@ -1,24 +1,18 @@
-const WebSocket = require('ws')
-const connection = new WebSocket('ws://localhost:3300')
+const Joi = require('joi')
+const { commands } = require('./commands')
+const { PersonSchema } = require('../../domains/person/models')
 
-connection.onopen = function(){
-   console.log('Connection open!')
-}
 
-/* const person1 = new WebSocket('ws://localhost:3300')
+describe('createPerson', () => {
+  it('should create a person', async () => {
+    const personName = 'Guilherme'
+    const personWs = {}
+    const personStrKeysExpected = ['_id', 'name']
 
-person1.onopen = () => {
-  const command = {
-    cmd: 'createRoomHandler',
-    payload: {
-      personName: 'Eu',
-      roomName: 'Sala 1'
-    }
-  }
-  console.log(123)
-  person1.send(JSON.stringify(command))
-} */
+    const person = await commands.createPerson({ personName, personWs })
 
-test('adds 1 + 2 to equal 3', () => {
-  expect(1+1).toBe(2)
-});
+    Joi.assert(person, PersonSchema)
+    expect(Object.keys(JSON.parse(JSON.stringify(person))))
+      .toEqual(personStrKeysExpected)
+  });
+})
