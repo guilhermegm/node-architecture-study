@@ -9,10 +9,13 @@ const sendRoomMessage = async ({
   
   const event = {
     usecase: 'sendRoomMessage',
-    room: room.name,
-    message
+    roomId: room._id,
+    personId: person._id,
+    message,
   }
   console.log(event);
+
+  return event
 }
 
 module.exports = {

@@ -11,20 +11,21 @@ const commands = {
     personWs.person = person
     return person
   },
-  createRoomHandler: async ({ personName, personWs, roomName }) => {
-    const person = await commands.createPerson({ personName, personWs })
+  createRoomHandler: async ({ personWs, roomName }) => {
+    const person = personWs.person
     const room = await roomUsecases.createRoom({ name: roomName })
 
-    return roomUsecases.addPerson({ roomName: room.name, person })
+    return roomUsecases.addPerson({ roomId: room._id, person })
   },
-  joinRoomHandler: async ({ personName, personWs, roomName }) => {
-    const person = await commands.createPerson({ personName, personWs })
-
-    return roomUsecases.addPerson({ roomName, person })
+  getRooms: async () => {
+    return roomUsecases.getRooms()
   },
-  sendRoomMessage: async ({ personName, personWs, roomName, message }) => {
+  joinRoomHandler: async ({ personWs, roomId }) => {
+    return roomUsecases.addPerson({ roomId, person: personWs.person })
+  },
+  sendRoomMessage: async ({ personWs, roomId, message }) => {
     const person = personWs.person
-    const room = await roomUsecases.getRoom({ roomName })
+    const room = await roomUsecases.getRoom({ roomId })
 
     return chatUsecases.sendRoomMessage({
       room,
